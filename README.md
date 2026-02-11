@@ -182,13 +182,13 @@ Recomendações:
 
 ## 🆚 Comparação: Análise Manual vs Agent
 
-| Aspecto | Manual | Com Agent |
-|---------|--------|-----------|
-| Escrever SQL | ✍️ Você escreve | ✅ Agente gera |
-| Executar queries | ⌨️ Terminal manual | ✅ Automático |
-| Correlacionar | 🧠 Mental | ✅ Agente faz |
-| Tempo médio | 30-60 min | 3-5 min |
-| Expertise SQL | Necessário | Opcional |
+| Aspecto          | Manual            | Com Agent     |
+| ---------------- | ----------------- | ------------- |
+| Escrever SQL     | ✍️ Você escreve    | ✅ Agente gera |
+| Executar queries | ⌨️ Terminal manual | ✅ Automático  |
+| Correlacionar    | 🧠 Mental          | ✅ Agente faz  |
+| Tempo médio      | 30-60 min         | 3-5 min       |
+| Expertise SQL    | Necessário        | Opcional      |
 
 ## 📊 Padrões de Incidentes Suportados
 

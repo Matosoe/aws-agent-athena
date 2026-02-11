@@ -1,0 +1,47 @@
+# AWS and credentials
+.aws/
+*.pem
+*.key
+credentials
+config
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs and temporary files
+*.log
+*.tmp
+temp/
+logs/
+
+# Athena results (local cache)
+athena-results/
+query-results/
+
+# Environment variables
+.env
+.env.local
+
+# Python (if using Python scripts)
+__pycache__/
+*.pyc
+*.pyo
+venv/
+.venv/
+
+# Node modules (if using Node.js)
+node_modules/
+package-lock.json
+
+# Output files
+incident_data.json
+*.csv

@@ -1,18 +1,18 @@
-# AWS Agent Athena - Análise de Incidentes com IA
+# AWS Agent Athena - Análise de Incidentes de Boleto com IA
 
-> **Análise automatizada de incidentes AWS usando GitHub Copilot Agent + AWS Athena**
+> **Análise automatizada de incidentes de boleto usando GitHub Copilot Agent + AWS Athena**
 
-Este repositório fornece um framework completo para analisar incidentes de produção usando agentes de IA (GitHub Copilot) que consultam dados no AWS Athena em linguagem natural.
+Este repositório fornece um framework completo para analisar incidentes de produção relacionados a **boletos** usando agentes de IA (GitHub Copilot) que consultam dados no AWS Athena em linguagem natural.
 
 ## 🎯 Objetivo
 
-Permitir que você analise incidentes AWS **sem escrever SQL manualmente**. Basta descrever o problema em linguagem cotidiana, e o agente:
+Permitir que você analise incidentes de boleto **sem escrever SQL manualmente**. Basta descrever o problema em linguagem cotidiana, e o agente:
 
 1. ✅ Monta queries SQL automaticamente
 2. ✅ Executa no Athena via AWS CLI
-3. ✅ Correlaciona logs, métricas e requisições
-4. ✅ Identifica causa raiz
-5. ✅ Apresenta análise estruturada com recomendações
+3. ✅ Correlaciona dados de cadastro de boleto, baixa, pagamento etc.
+4. ✅ Interpreta resultados e identifica padrões
+5. ✅ Apresenta análise estruturada com histórico e situação atual do boleto.
 
 ## 📚 Estrutura do Repositório
 
@@ -20,7 +20,7 @@ Permitir que você analise incidentes AWS **sem escrever SQL manualmente**. Bast
 aws-agent-athena/
 ├── README.md                    # Este arquivo
 ├── AGENT_INSTRUCTIONS.md        # Instruções detalhadas para o agente
-├── INCIDENT_EXAMPLES.md         # 6 exemplos práticos de incidentes
+├── INCIDENT_EXAMPLES.md         # Exemplos práticos de incidentes
 └── COPILOT_PROMPT.md           # Templates de prompts prontos para usar
 ```
 
@@ -40,16 +40,16 @@ aws-agent-athena/
    cd aws-agent-athena
    ```
 
-2. **Configure o agente (uma vez):**
-   - Abra VS Code neste diretório
-   - Abra o chat do GitHub Copilot
-   - Cole o prompt de configuração de [COPILOT_PROMPT.md](COPILOT_PROMPT.md)
+2. **Inicie a análise (copie e cole no Copilot Chat):**
 
-3. **Analise um incidente:**
-   - Copie um dos exemplos de [INCIDENT_EXAMPLES.md](INCIDENT_EXAMPLES.md)
-   - Modifique com dados reais do seu incidente
-   - Cole no Copilot
-   - Aguarde a análise completa!
+```text
+leia os arquivos copilot_prompt.md e agent_instructions.md e resolva meu problema abaixo:
+
+Situacao:Cliente com CPF 67890123456 reporta que o boleto nao aparece na lista de pagamento.
+```
+
+3. **(Opcional) Veja exemplos práticos:**
+   - Use [INCIDENT_EXAMPLES.md](INCIDENT_EXAMPLES.md) como referência
 
 ## 📖 Documentação
 
@@ -64,52 +64,45 @@ aws-agent-athena/
   - Padrões comuns de incidentes
 
 ### Para Ver Exemplos Práticos
-- **[INCIDENT_EXAMPLES.md](INCIDENT_EXAMPLES.md)** - 6 casos reais
-  - Database Connection Timeout
-  - Memory Leak
-  - Cascading Failure
-  - DDoS / Traffic Spike
-  - Slow Query Introduzida
-  - Breaking Change em Deploy
+- **[INCIDENT_EXAMPLES.md](INCIDENT_EXAMPLES.md)** - exemplos de incidentes de boleto
+   - Boleto não aparece na lista
+   - Duplicidade de boleto
+   - Pagou mas segue pendente
+   - Baixado indevidamente
 
 ## 🎯 Casos de Uso
 
-### 1. Análise Rápida de Spike de Erros
+### 1. Boleto não aparece na lista
 ```markdown
-Serviço: payment-service
-Sintoma: Erros 5xx aumentaram 300% nas últimas 2 horas
+Situacao: Cliente com CPF 67890123456 reporta que o boleto nao aparece na lista de pagamento.
 ```
-→ Agente identifica causa raiz em minutos
+→ Agente identifica se está pendente, pago ou baixado
 
-### 2. Investigação de Latência Alta
+### 2. Boleto aparece como pago, mas cliente diz não ter pago
 ```markdown
-Serviço: checkout-service
-Sintoma: Latência subiu de 200ms para 5s após deploy
+Situacao: Cliente com CPF 67890123456 reporta que o boleto consta como PAGO, mas ele nao reconhece o pagamento.
 ```
-→ Agente correlaciona deploy com queries lentas
+→ Agente valida registros e aponta inconsistências
 
-### 3. Debug de Incidente Recorrente
+### 3. Duplicidade de boleto
 ```markdown
-Padrão: Timeout toda terça-feira às 07:00 UTC
+Situacao: Cliente com CPF 67890123456 reporta dois boletos iguais para o mesmo vencimento.
 ```
-→ Agente busca padrão histórico e explica causa
+→ Agente busca duplicidades por CPF/vencimento/valor
 
-### 4. Análise Pós-Deploy
+### 4. Baixa não refletiu
 ```markdown
-Deploy: v2.5.0 às 08:00 UTC
-Sintoma: Taxa de erro aumentou 10%
+Situacao: Cliente com CPF 67890123456 pagou, mas o boleto ainda aparece como PENDENTE.
 ```
-→ Agente compara antes vs depois e recomenda ação
+→ Agente verifica situação atual e recomenda próximos passos
 
 ## 🔧 Configuração AWS
 
 ### Tabelas Esperadas no Athena
 
-O projeto espera 3 tabelas no Athena:
+O projeto espera tabelas com dados de boleto no Athena. A tabela mínima esperada é:
 
-1. **`logs`** - eventos de log das aplicações
-2. **`metrics`** - métricas de sistema (CPU, memória, etc)
-3. **`requests`** - requisições HTTP
+1. **`cadastro_boletos`** - cadastro e situação atual do boleto (PENDENTE, PAGO, BAIXADO)
 
 Veja estrutura completa em [AGENT_INSTRUCTIONS.md](AGENT_INSTRUCTIONS.md).
 
@@ -133,19 +126,19 @@ aws sts assume-role \
 
 ```
 1. Entender o Incidente
-   └─> Serviço, timestamp, sintomas
+   └─> CPF, sintoma e janela de tempo
 
-2. Buscar Logs de Erro
-   └─> SELECT * FROM logs WHERE service = '...'
+2. Consultar Boletos Pendentes
+   └─> SELECT * FROM cadastro_boletos WHERE cpf_pagador = '...' AND situacao = 'PENDENTE'
 
-3. Analisar Métricas
-   └─> SELECT AVG(value) FROM metrics WHERE ...
+3. Consultar Boletos Pagos
+   └─> SELECT * FROM cadastro_boletos WHERE cpf_pagador = '...' AND situacao = 'PAGO'
 
-4. Analisar Requisições
-   └─> SELECT status_code, COUNT(*) FROM requests ...
+4. Consultar Boletos Baixados
+   └─> SELECT * FROM cadastro_boletos WHERE cpf_pagador = '...' AND situacao = 'BAIXADO'
 
 5. Correlacionar Dados
-   └─> Erros ocorrem quando métrica X > Y?
+   └─> O sintoma é explicado pela situação atual do boleto?
 
 6. Causa Raiz + Recomendações
    └─> Análise estruturada com timeline e ações
@@ -154,30 +147,26 @@ aws sts assume-role \
 ### Exemplo de Análise Gerada
 
 ```markdown
-Análise: O payment-service teve spike de erros 5xx causado por 
-saturação do pool de conexões do banco de dados.
+Análise: Cliente com CPF 67890123456 reporta que o boleto não aparece na lista.
 
 Timeline:
-- Início: 2026-02-11 07:03:45 UTC
-- Pico: 07:15 UTC (95% das requisições falhando)
-- Duração: 35 minutos
+- Início: 2026-02-24 07:00:00 UTC
+- Verificação: 07:02 UTC
 
 Dados:
-- Erros: 1,247 DATABASE_CONNECTION_TIMEOUT
-- DB Pool: chegou a 98% (normal: 45%)
-- Status 5xx: 1,532 (23% das requisições)
+- Boletos PENDENTES: 0
+- Boletos PAGOS: 1 (ex.: id 2, valor 200.50)
 
 Correlação:
-87% dos timeouts ocorreram quando db_pool_usage > 95%.
+O boleto não aparece como pendente porque já consta como PAGO.
 
 Causa Raiz:
-Pool de conexões saturado. Nova feature abre 5 conexões por job,
-jobs aumentaram de 2 para 8 simultâneos.
+O boleto já foi pago, por isso não aparece na lista de pendentes.
 
 Recomendações:
-☑ Imediato: Aumentar pool de 20 para 50 conexões
-☐ Curto prazo: Otimizar jobs para reusar conexões
-☐ Longo prazo: Alerting para pool > 80%
+☑ Imediato: Informar o cliente que o boleto já foi pago
+☐ Curto prazo: Validar se há outros boletos em aberto para o CPF
+☐ Longo prazo: Monitorar incidentes de duplicidade/baixa incorreta
 ```
 
 ## 🆚 Comparação: Análise Manual vs Agent
@@ -192,14 +181,11 @@ Recomendações:
 
 ## 📊 Padrões de Incidentes Suportados
 
-- ✅ Database Connection Timeout
-- ✅ Memory Leak
-- ✅ Cascading Failure
-- ✅ DDoS / Traffic Spike
-- ✅ Slow Query
-- ✅ Deployment Breaking Change
-- ✅ Circuit Breaker Open
-- ✅ Rate Limiting Issues
+- ✅ Boleto não aparece na lista
+- ✅ Boleto pago mas exibido como pendente
+- ✅ Boleto baixado indevidamente
+- ✅ Duplicidade de boleto
+- ✅ Divergência de situação (PENDENTE/PAGO/BAIXADO)
 - ✅ ... e outros (personalizável)
 
 ## 🛠️ Troubleshooting
@@ -211,7 +197,7 @@ Recomendações:
 
 ### Resultados não fazem sentido?
 - Confirme timestamps corretos
-- Verifique case-sensitive nos nomes de serviços
+- Verifique CPF e filtros de situação (PENDENTE/PAGO/BAIXADO)
 - Amplie janela de tempo
 
 ### Copilot não executa comandos?
@@ -219,15 +205,15 @@ Recomendações:
 - Dê permissão explícita: "Execute as queries"
 - Ou execute manualmente e cole resultados
 
-Veja mais em [COPILOT_PROMPT.md](COPILOT_PROMPT.md#troubleshooting).
+Veja [COPILOT_PROMPT.md](COPILOT_PROMPT.md) e [AGENT_INSTRUCTIONS.md](AGENT_INSTRUCTIONS.md).
 
 ## 🎯 Roadmap
 
-- [ ] Adicionar exemplos para Kubernetes logs
-- [ ] Suporte para CloudWatch Logs Insights
+- [ ] Adicionar mais exemplos de incidentes de boleto
+- [ ] Suporte a tabelas de pagamento/baixa (quando existirem)
 - [ ] Template de postmortem automático
 - [ ] Integração com PagerDuty/Slack
-- [ ] Dashboard de métricas de incidentes
+- [ ] Dashboard de métricas de incidentes de boleto
 - [ ] Skills em Python (alternativa ao terminal)
 
 ## 🤝 Contribuindo

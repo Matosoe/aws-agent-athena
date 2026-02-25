@@ -37,25 +37,12 @@ git push -u origin main
 
 1. **Abra VS Code** neste diretório
 2. **Abra Copilot Chat**
-3. **Cole isto:**
+3. **Cole isto (início rápido):**
 
-```markdown
-Leia os arquivos AGENT_INSTRUCTIONS.md, INCIDENT_EXAMPLES.md e 
-COPILOT_PROMPT.md. Confirme que está pronto para analisar incidentes.
-```
+```text
+leia os arquivos copilot_prompt.md e agent_instructions.md e resolva meu problema abaixo:
 
-4. **Cole um incidente real:**
-
-```markdown
-# INCIDENTE: [seu problema]
-
-Serviço: nome-do-servico
-Início: 2026-02-11 10:00:00 UTC
-Sintomas:
-  - [sintoma 1]
-  - [sintoma 2]
-
-Analise este incidente completo.
+Situacao:Cliente com CPF 67890123456 reporta que o boleto nao aparece na lista de pagamento.
 ```
 
 5. **Aguarde a análise automática!** ✨

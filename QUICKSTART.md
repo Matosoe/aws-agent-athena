@@ -1,52 +1,41 @@
 # 🚀 Quick Start - 2 Minutos
 
-## Para Publicar no GitHub AGORA
+## Antes de usar o agente
 
-### Opção 1 - Automático (Recomendado) ⚡
-
-```bash
-# Instale GitHub CLI (se ainda não tiver)
-winget install --id GitHub.cli
-
-# Autentique
-gh auth login
-
-# Publique (substitua SEU_USUARIO)
-cd C:/Projetos/aws-agent-athena
-publish.bat SEU_USUARIO
-```
-
-### Opção 2 - Manual 📝
-
-1. Crie repositório no GitHub: https://github.com/new
-   - Nome: `aws-agent-athena`
-   - Público
-   - **NÃO** inicialize com README
-
-2. Execute:
-```bash
-cd C:/Projetos/aws-agent-athena
-git remote add origin https://github.com/SEU_USUARIO/aws-agent-athena.git
-git branch -M main
-git push -u origin main
-```
+1. **Prepare o Athena (tabela + dados de exemplo)** seguindo [GITHUB_SETUP.md](GITHUB_SETUP.md).
+2. **Configure AWS CLI** conforme [GITHUB_SETUP.md](GITHUB_SETUP.md).
+3. **Se precisar publicar no GitHub**, use o passo a passo de [GITHUB_SETUP.md](GITHUB_SETUP.md).
 
 ---
 
-## Para Usar o Agente
+## Para usar o agente
 
 1. **Abra VS Code** neste diretório
 2. **Abra Copilot Chat**
 3. **Cole isto (início rápido):**
 
 ```text
-leia os arquivos copilot_prompt.md e agent_instructions.md e resolva meu problema abaixo:
+Use a skill /boleto-incidente-resposta para analisar o incidente abaixo usando Athena via AWS CLI, executando as consultas e retornando diagnóstico final completo.
 
-Situacao:Cliente com CPF 67890123456 reporta que o boleto nao aparece na lista de pagamento.
+Situação: Cliente com CPF 67890123456 reporta que o boleto não aparece na lista de pagamento.
 ```
 
-5. **Aguarde a análise automática!** ✨
+4. **Aguarde a análise automática!** ✨
+
+## Para usar ferramentas de boleto (Bash)
+
+1. **Abra Copilot Chat**
+2. **Cole isto (início rápido):**
+
+```text
+Use a skill /boleto-ferramentas para converter e explicar o boleto abaixo.
+
+Entrada: 34196166700000123451101234567880057123457000
+Tarefa: converter para linha digitável, formatar e quebrar os campos.
+```
+
+3. **Receba a saída com conversão e decomposição dos campos.**
 
 ---
 
-**Ver mais:** [README.md](README.md) | [COPILOT_PROMPT.md](COPILOT_PROMPT.md)
+**Ver mais:** [README.md](README.md) | [GITHUB_SETUP.md](GITHUB_SETUP.md) | [.github/skills/boleto-incidente-resposta/SKILL.md](.github/skills/boleto-incidente-resposta/SKILL.md) | [.github/skills/boleto-ferramentas/SKILL.md](.github/skills/boleto-ferramentas/SKILL.md)
